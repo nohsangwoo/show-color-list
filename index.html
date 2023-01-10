@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root {
+            --main-bg-color: white;
+        }
+
+        .color-box {
+            background-color: var(--main-bg-color);
+            display: inline-block;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+        }
+
+        .color-contents-box {
+            padding: 20px 10px;
+            border: 1px solid black;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="color-wrapper" class="color-box">
+    </div>
+    <script>
+        const xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                jsonfunc(this.responseText); //this = xhttp
+            }
+        }
+        xhttp.open("GET", "color.json", true);
+        xhttp.send();
+
+
+        function jsonfunc(jsonText) {
+            let json = JSON.parse(jsonText); // String -> json으로 변환
+            let keys = Object.keys(json)
+            let txt = "";
+
+            for (const property in json) {
+                const rgba = json[property].split(",")
+                const contents = `
+                <div class="color-contents-box">
+                    <div class="box" style="background-color: rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]},${rgba[3]});"></div>
+                    <div>${property}: ${json[property]}<div>
+                </div>
+                `;
+                document.querySelector('#color-wrapper').innerHTML += `${contents}`;
+            }
+        }
+
+    </script>
+</body>
+
+</html>
